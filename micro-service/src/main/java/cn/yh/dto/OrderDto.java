@@ -6,7 +6,7 @@ public class OrderDto {
 	private String uuid;
 	private Long customerId;
 	private String title;
-	private int ticketNum;
+	private long ticketNum;
 	private int amount;
 	private String status;
 
@@ -42,11 +42,11 @@ public class OrderDto {
 		this.title = title;
 	}
 
-	public int getTicketNum() {
+	public long getTicketNum() {
 		return ticketNum;
 	}
 
-	public void setTicketNum(int ticketNum) {
+	public void setTicketNum(long ticketNum) {
 		this.ticketNum = ticketNum;
 	}
 
