@@ -43,5 +43,6 @@
 		<module>micro-ticket</module>
 		<module>micro-registry</module>
 		<module>micro-proxy</module>
+		<module>micro-user</module>
 	</modules>
 </project>
