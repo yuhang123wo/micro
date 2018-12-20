@@ -41,4 +41,15 @@ public class TicketService {
 	@Autowired
 	private TicketDao ticketDao;
 
+	@Transactional
+	@JmsListener(destination = "order:ticket_move", containerFactory = "msgFactory")
+	public void handleTicketMove(OrderDto orderDto) {
+		int count = ticketDao.moveTicket(orderDto.getCustomerId(), orderDto.getTicketNum());
+		if (count == 0) {
+			System.out.println("alreay move");
+
+		}
+		orderDto.setStatus("moved");
+		jmsTemplate.convertAndSend("order:ticket_done", orderDto);
+	}
 }

@@ -27,8 +27,17 @@ public class OrderService {
 		} else {
 			Order order = createOrder(dto);
 			orderDao.save(order);
+			dto.setId(order.getId());
 		}
 		jmsTemplate.convertAndSend("order:pay", dto);
+	}
+
+	@Transactional
+	@JmsListener(destination = "order:done", containerFactory = "msgFactory")
+	private void handleOrderDone(OrderDto dto) {
+		Order order = orderDao.findOneById(dto.getId());
+		order.setStatus("done");
+		orderDao.save(order);
 	}
 
 	private Order createOrder(OrderDto dto) {
