@@ -20,6 +20,7 @@ public class TicketService {
 	private JmsTemplate jmsTemplate;
 
 	@JmsListener(destination = "order:new", containerFactory = "msgFactory")
+	@Transactional
 	public void handleTicketLock(OrderDto orderDto) {
 		log.info("handleTicketLock" + orderDto);
 		int count = this.ticketLock(orderDto);
@@ -27,7 +28,8 @@ public class TicketService {
 			orderDto.setStatus("TICKET_LOCKED");
 			jmsTemplate.convertAndSend("order:locked", orderDto);
 		} else {
-
+			orderDto.setStatus("TICKET_LOCKED_FAIL");
+			jmsTemplate.convertAndSend("order:fail", orderDto);
 		}
 	}
 

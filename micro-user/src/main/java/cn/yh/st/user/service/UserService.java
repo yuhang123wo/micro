@@ -38,7 +38,7 @@ public class UserService {
 		pay.setAmount(orderDto.getAmount());
 		pay.setStatus("PAID");
 		payDao.save(pay);
-		user.setDeposit(user.getDeposit() - orderDto.getAmount());
+//		user.setDeposit(user.getDeposit() - orderDto.getAmount());
 		userDao.charge(orderDto.getCustomerId(), orderDto.getAmount());
 
 		orderDto.setStatus("PAID");

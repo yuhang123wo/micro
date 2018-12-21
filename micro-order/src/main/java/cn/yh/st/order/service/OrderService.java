@@ -20,7 +20,7 @@ public class OrderService {
 
 	@Transactional
 	@JmsListener(destination = "order:locked", containerFactory = "msgFactory")
-	private void handleOrderNew(OrderDto dto) {
+	public void handleOrderNew(OrderDto dto) {
 		System.out.println("handleOrderNew" + dto);
 		if (orderDao.findOneByUuid(dto.getUuid()) != null) {
 			System.out.println("handleOrderNew is exist" + dto);
@@ -34,10 +34,25 @@ public class OrderService {
 
 	@Transactional
 	@JmsListener(destination = "order:done", containerFactory = "msgFactory")
-	private void handleOrderDone(OrderDto dto) {
+	public void handleOrderDone(OrderDto dto) {
 		Order order = orderDao.findOneById(dto.getId());
 		order.setStatus("done");
 		orderDao.save(order);
+	}
+
+	@JmsListener(destination = "order:fail", containerFactory = "msgFactory")
+	@Transactional
+	public void handleTicketLock(OrderDto orderDto) {
+		if (orderDto.getId() == null) {
+			Order order = createOrder(orderDto);
+			order.setStatus("FAIL");
+			order.setReason("LOCKED_FAIL");
+			orderDao.save(order);
+		} else {
+			Order order = orderDao.findOneById(orderDto.getId());
+			orderDto.setStatus("TICKET_LOCKED_FAIL");
+			jmsTemplate.convertAndSend("order:fail", orderDto);
+		}
 	}
 
 	private Order createOrder(OrderDto dto) {

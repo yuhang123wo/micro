@@ -8,7 +8,7 @@ import cn.yh.st.order.domain.Order;
 
 public interface OrderDao extends JpaRepository<Order, Long> {
 
-	List<Order> findByCustomerId(Long customerId);
+	List<Order> findByCusomerId(Long customerId);
 
 	Order findOneByUuid(String uuid);
 
