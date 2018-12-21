@@ -44,5 +44,6 @@
 		<module>micro-registry</module>
 		<module>micro-proxy</module>
 		<module>micro-user</module>
+		<module>micro-axon</module>
 	</modules>
 </project>
